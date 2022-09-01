@@ -8,6 +8,7 @@ const bodyParser = require("body-parser");
 const expressSanitizer = require("express-sanitizer");
 const csrf = require("csurf");
 const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
 
 const csrfProtection = csrf({ cookie: true });
 
@@ -23,6 +24,7 @@ const projectId = process.env.PROJECTID;
 
 app.use(expressSanitizer());
 app.use(cookieParser());
+app.use(helmet());
 
 app.post("/car-insurance", csrfProtection, (req, res) => {
   console.log("Request is made with input: ", req.body.data);
