@@ -22,6 +22,8 @@ app.use(expressSanitizer());
 app.post("/car-insurance", (req, res) => {
   console.log("Request is made with input: ", req.body.data);
 
+  const sanitizedString = req.sanitize(req.body.data);
+
   const discovery = new DiscoveryV2({
     version: version,
     authenticator: new IamAuthenticator({
@@ -31,14 +33,14 @@ app.post("/car-insurance", (req, res) => {
   });
 
   const parameters = {
-    naturalLanguageQuery: `${req.body.data}`,
+    naturalLanguageQuery: `${sanitizedString}`,
     projectId: `${projectId}`,
     count: 3,
   };
 
   discovery
     .query(parameters)
-    .then((response) => res.send(response.result.results))
+    .then((response) => res.send({ sanitizedString: response.result.results }))
     .catch((err) => {
       console.log("error:", err);
     });
